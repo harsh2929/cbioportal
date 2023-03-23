@@ -23,7 +23,10 @@ links:
 
 https://groups:
   google:
-    com/g/cbioportal:
+    com:
+      g:
+        cbioportal: https://groups.google.com/g/cbioportal
+
 
 favicon: images/cbio-logo.png
 footer:
