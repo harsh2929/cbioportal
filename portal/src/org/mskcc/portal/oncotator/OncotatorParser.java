@@ -1,5 +1,6 @@
 package org.mskcc.portal.oncotator;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -8,52 +9,50 @@ import java.io.IOException;
 /**
  * Parses JSON Retrieved from Oncotator.
  */
-public class OncotatorParser
-{
+public class OncotatorParser {
 
-	/**
-	 * Parses the JSON returned by the oncotator web service, and returns
-	 * the information as a new OncotateRecord instance.
-	 * 
-	 * @param key			chr#_start_end_allele1_allele2
-	 * @param json			JSON object returned by the web service
-	 * @return				new OncotatorRecord, or null if JSON has an error
-	 * @throws IOException
-	 */
-    public static OncotatorRecord parseJSON (String key, String json) throws IOException
-    {
-        ObjectMapper m = new ObjectMapper();
-        JsonNode rootNode = m.readValue(json, JsonNode.class);
-        
-        OncotatorRecord oncotator = new OncotatorRecord(key);
-        
-        // check if JSON has an ERROR
-        
-        JsonNode errorNode = rootNode.path("ERROR");
-        if (!errorNode.isMissingNode())
-        {
-        	System.out.println("JSON parse error for " + key + ": " + errorNode.getTextValue());
-        	return null;
-        }
+    /**
+     * Parses the JSON returned by the oncotator web service, and returns
+     * the information as a new OncotateRecord instance.
+     *
+     * @param key  chr#_start_end_allele1_allele2
+     * @param json JSON object returned by the web service
+     * @return new OncotatorRecord, or null if JSON has an error
+     * @throws JsonProcessingException if there is an error parsing the JSON
+     */
+    public static OncotatorRecord parseJSON(String key, String json) throws JsonProcessingException {
+        try (ObjectMapper mapper = new ObjectMapper()) {
+            JsonNode rootNode = mapper.readTree(json);
 
-        // proceed in case of no JSON error
-        
-        JsonNode genomeChange = rootNode.path("genome_change");
-        if (!genomeChange.isMissingNode()) {
-            oncotator.setGenomeChange(genomeChange.getTextValue());
-        }
+            OncotatorRecord oncotator = new OncotatorRecord(key);
 
-        JsonNode cosmic = rootNode.path("Cosmic_overlapping_mutations");
-        if (!cosmic.isMissingNode()) {
-            oncotator.setCosmicOverlappingMutations(cosmic.getTextValue());
-        }
+            // check if JSON has an ERROR
 
-        JsonNode dbSnpRs = rootNode.path("dbSNP_RS");
-        if (!dbSnpRs.isMissingNode()) {
-            oncotator.setDbSnpRs(dbSnpRs.getTextValue());
-        }
+            JsonNode errorNode = rootNode.path("ERROR");
+            if (!errorNode.isNull()) {
+                System.out.println("JSON parse error for " + key + ": " + errorNode.textValue());
+                return null;
+            }
 
-        JsonNode bestTranscriptIndexNode = rootNode.path("best_canonical_transcript");
+            // proceed in case of no JSON error
+
+            JsonNode genomeChange = rootNode.path("genome_change");
+            if (!genomeChange.isNull()) {
+                oncotator.setGenomeChange(genomeChange.textValue());
+            }
+
+            JsonNode cosmic = rootNode.path("Cosmic_overlapping_mutations");
+            if (!cosmic.isNull()) {
+                oncotator.setCosmicOverlappingMutations(cosmic.textValue());
+            }
+
+            JsonNode dbSnpRs = rootNode.path("dbSNP_RS");
+            if (!dbSnpRs.isNull()) {
+                oncotator.setDbSnpRs(dbSnpRs.textValue());
+            }
+
+            JsonNode bestTranscriptIndexNode = rootNode.path("best_canonical_transcript");
+
 
         if (!bestTranscriptIndexNode.isMissingNode()) {
             int transcriptIndex = bestTranscriptIndexNode.getIntValue();
