@@ -1,17 +1,5 @@
-# This image includes both the web app and the data import related scripts in
-# one image. Because of historic reasons some of these scripts run java
-# artifacts under the hood. It therefore currently makes more sense to have a
-# single image supporting both instead of moving the scripts out to a separate
-# container.
-#
-# Use from root directory of repo like:
-#
-# docker build -f docker/web-and-data/Dockerfile -t cbioportal-container:tag-name .
-#
-# NOTE: the .git folder is included in the build stage, but excluded 
-# from the final image. No confidential information is exposed.
-# (see: stackoverflow.com/questions/56278325)
-FROM maven:3-eclipse-temurin-11 as build
+# Use a smaller base image
+FROM adoptopenjdk:11-jre-hotspot as build
 
 # download maven dependencies first to take advantage of docker caching
 COPY pom.xml                                     /cbioportal/
@@ -34,39 +22,14 @@ RUN for subproject in */.; do cp version.sh "$subproject"; cd "$subproject"; mvn
 COPY portal/pom.xml                                 portal/
 RUN mvn dependency:go-offline --fail-never
 
-COPY $PWD /cbioportal
-# Use quite output so we can see the build steps easily
-RUN mvn -DskipTests clean install -q
-
-FROM eclipse-temurin:11
-
-# download system dependencies first to take advantage of docker caching
-RUN apt-get update; apt-get install -y --no-install-recommends \
-        build-essential \
-        default-mysql-client \
-        default-libmysqlclient-dev \
-        python3 \
-        python3-setuptools \
-        python3-dev \
-        python3-pip \
-        unzip \
-	&& rm -rf /var/lib/apt/lists/* \
-    && pip3 install wheel
-
-ENV PORTAL_WEB_HOME=/cbioportal-webapp
-
-RUN mkdir -p /cbioportal
-COPY --from=build /cbioportal/portal/target/cbioportal*.war /app.war
-COPY --from=build /cbioportal/portal/target/dependency/webapp-runner.jar /webapp-runner.jar
-# copy over core jar and scripts
+COPY $PWD/portal/src/main/docker /cbioportal/docker
+COPY $PWD/requirements.txt /cbioportal/requirements.txt
+# Use COPY with a list of files
+COPY --from=build /cbioportal/portal/target/cbioportal*.war /cbioportal/app.war
+COPY --from=build /cbioportal/portal/target/dependency/webapp-runner.jar /cbioportal/webapp-runner.jar
 COPY --from=build /cbioportal/core /cbioportal/core
 COPY --from=build /cbioportal/scripts /cbioportal/scripts
 COPY --from=build /cbioportal/db-scripts /cbioportal/db-scripts
-COPY --from=build /cbioportal/requirements.txt /cbioportal/requirements.txt
-
-# install build and runtime dependencies
-# ignore update failures
-RUN  pip3 install -r /cbioportal/requirements.txt
 
 # add importer scripts to PATH for easy running in containers
 RUN find /cbioportal/core/src/main/scripts/ -type f -executable \! -name '*.pl'  -print0 | xargs -0 -- ln -st /usr/local/bin
