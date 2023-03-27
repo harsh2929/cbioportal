@@ -7,61 +7,51 @@ public class VariantCount implements Serializable {
     
     @NotNull
     private String molecularProfileId;
+    
     @NotNull
-    private Integer entrezGeneId;
+    private int entrezGeneId;
+    
     private String keyword;
+    
     @NotNull
-    private Integer numberOfSamples;
+    private int numberOfSamples;
+    
     @NotNull
-    private Integer numberOfSamplesWithMutationInGene;
+    private int numberOfSamplesWithMutationInGene;
+    
     @NotNull
-    private Integer numberOfSamplesWithKeyword;
+    private int numberOfSamplesWithKeyword;
+
+    public VariantCount(String molecularProfileId, int entrezGeneId, String keyword, int numberOfSamples, int numberOfSamplesWithMutationInGene, int numberOfSamplesWithKeyword) {
+        this.molecularProfileId = molecularProfileId;
+        this.entrezGeneId = entrezGeneId;
+        this.keyword = keyword;
+        this.numberOfSamples = numberOfSamples;
+        this.numberOfSamplesWithMutationInGene = numberOfSamplesWithMutationInGene;
+        this.numberOfSamplesWithKeyword = numberOfSamplesWithKeyword;
+    }
 
     public String getMolecularProfileId() {
         return molecularProfileId;
     }
 
-    public void setMolecularProfileId(String molecularProfileId) {
-        this.molecularProfileId = molecularProfileId;
-    }
-
-    public Integer getEntrezGeneId() {
+    public int getEntrezGeneId() {
         return entrezGeneId;
-    }
-
-    public void setEntrezGeneId(Integer entrezGeneId) {
-        this.entrezGeneId = entrezGeneId;
     }
 
     public String getKeyword() {
         return keyword;
     }
 
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
-    }
-
-    public Integer getNumberOfSamples() {
+    public int getNumberOfSamples() {
         return numberOfSamples;
     }
 
-    public void setNumberOfSamples(Integer numberOfSamples) {
-        this.numberOfSamples = numberOfSamples;
-    }
-
-    public Integer getNumberOfSamplesWithMutationInGene() {
+    public int getNumberOfSamplesWithMutationInGene() {
         return numberOfSamplesWithMutationInGene;
     }
 
-    public void setNumberOfSamplesWithMutationInGene(Integer numberOfSamplesWithMutationInGene) {
-        this.numberOfSamplesWithMutationInGene = numberOfSamplesWithMutationInGene;
-    }
-
-    public Integer getNumberOfSamplesWithKeyword() {
+    public int getNumberOfSamplesWithKeyword() {
         return numberOfSamplesWithKeyword;
-    }
-
-    public void setNumberOfSamplesWithKeyword(Integer numberOfSamplesWithKeyword) {
-        this.numberOfSamplesWithKeyword = numberOfSamplesWithKeyword;
     }
 }
