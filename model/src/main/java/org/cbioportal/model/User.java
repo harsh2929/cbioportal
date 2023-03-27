@@ -46,41 +46,71 @@ public class User implements Serializable {
     private boolean enabled;
 
     public User(String email, String name, boolean enabled) {
-        if (null == email) {
-            throw new IllegalArgumentException ("email is null.");
+        if (email == null) {
+            throw new IllegalArgumentException("email is null.");
+        }
+        if (name == null) {
+            throw new IllegalArgumentException("name is null.");
         }
         this.email = email;
-        if (null == name) {
-            throw new IllegalArgumentException ("name is null.");
-        }
         this.name = name;
         this.enabled = enabled;
     }
 
     public User(String email, String name, Boolean enabled) {
-        this(email, name, enabled != null ? enabled.booleanValue() : false);
+        this(email, name, enabled != null && enabled);
     }
 
+    /**
+     * Gets the user's email.
+     *
+     * @return The user's email.
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets the user's email.
+     *
+     * @param email The user's email.
+     */
     public void setEmail(String email) {
         this.email = email.toLowerCase();
     }
 
+    /**
+     * Gets the user's name.
+     *
+     * @return The user's name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the user's name.
+     *
+     * @param name The user's name.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns true if the user is enabled, false otherwise.
+     *
+     * @return Whether or not the user is enabled.
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Sets whether or not the user is enabled.
+     *
+     * @param enabled Whether or not the user is enabled.
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -90,21 +120,16 @@ public class User implements Serializable {
         if (this == otherUser) {
             return true;
         }
-                
-        if (!(otherUser instanceof User)) {
+        if (otherUser == null || getClass() != otherUser.getClass()) {
             return false;
         }
-                
-        User that = (User) otherUser;
-        return this.email == that.email
-            && this.name == that.name;
+        User user = (User) otherUser;
+        return Objects.equals(email, user.email) &&
+               Objects.equals(name, user.name);
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + (this.email != null ? this.email.hashCode() : 0);
-        hash = 67 * hash + (this.name != null ? this.name.hashCode() : 0);
-        return hash;
+        return Objects.hash(email, name);
     }
 }
