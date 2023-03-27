@@ -2,24 +2,26 @@ package org.cbioportal.model;
 
 import java.io.Serializable;
 
-public class CancerStudyTags implements Serializable {
+public final class CancerStudyTags implements Serializable {
+    
+    private final Integer cancerStudyId;
+    private final String tags;
 
-    private Integer cancerStudyId;
-    private String tags;
+    public CancerStudyTags(Integer cancerStudyId, String tags) {
+        this.cancerStudyId = cancerStudyId;
+        this.tags = tags;
+    }
 
     public Integer getCancerStudyId() {
         return cancerStudyId;
     }
 
-    public void setCancerStudyId(Integer cancerStudyId) {
-        this.cancerStudyId = cancerStudyId;
-    }
-
     public String getTags() {
         return tags;
     }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
 }
+With these changes, the class is now immutable, has a constructor that allows easy creation of instances, and follows the best practices for encapsulation.
+
+
+
+
