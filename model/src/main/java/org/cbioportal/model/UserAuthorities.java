@@ -41,24 +41,32 @@ import java.util.List;
  *
  * @author Benjamin Gross
  */
-public class UserAuthorities implements Serializable {
+    private final String userEmail;
+    private final List<String> userAuthorities;
 
-    private String email;
-    private List<String> authorities;
-
-    public UserAuthorities() {}
-   
     /**
      * Constructor.
      */
-    public UserAuthorities(String email, List<String> authorities) {
-        this.email = email;
-        this.authorities = authorities;
+    public UserAuthorities(String userEmail, List<String> userAuthorities) {
+        this.userEmail = userEmail.toLowerCase();
+        this.userAuthorities = userAuthorities;
     }
 
-    // accessors
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email.toLowerCase(); }
-    public List<String> getAuthorities() { return authorities; }
-    public void setAuthorities(List<String> authorities) { this.authorities = authorities; }
+    /**
+     * Get the user email.
+     *
+     * @return The user email.
+     */
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    /**
+     * Get the user authorities.
+     *
+     * @return The user authorities.
+     */
+    public List<String> getUserAuthorities() {
+        return userAuthorities;
+    }
 }
