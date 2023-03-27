@@ -1,33 +1,29 @@
 package org.cbioportal.model;
 
 public class CaseListDataCount {
+    private final String label;
+    private final String value;
+    private int count;
 
-    private String label;
-    private String value;
-    private Integer count;
+    public CaseListDataCount(String label, String value, int count) {
+        this.label = label;
+        this.value = value;
+        this.count = count;
+    }
 
     public String getLabel() {
         return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
     }
 
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public Integer getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(Integer count) {
-        this.count = count;
+    public void incrementCount() {
+        count++;
     }
-
 }
