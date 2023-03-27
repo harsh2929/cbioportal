@@ -1,13 +1,21 @@
 package org.cbioportal.model;
 
 /**
- * Data that can be binned, clinical or custom
+ * Represents data that can be binned, such as clinical or custom data.
  */
-public interface Binnable {
-    String getAttrId();
-    String getAttrValue();
-    String getSampleId();
-    String getPatientId();
-    String getStudyId();
-    Boolean isPatientAttribute();
+public interface BinningData {
+    
+ 
+    String getAttributeId();
+ 
+    String getAttributeValue();
+
+    SampleId getSampleId();
+
+    PatientId getPatientId();
+    
+
+    StudyId getStudyId();
+    
+    boolean isPatientAttribute();
 }
