@@ -136,3 +136,11 @@ public class BaseAlterationFilter implements Serializable {
     }
 
 }
+
+
+/*Use private access modifier for fields
+
+Simplify tiersBooleanMap initialization
+
+Remove redundant code
+*/
